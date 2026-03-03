@@ -38,6 +38,21 @@ public class Usuario {
     public Usuario() {
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nombres='" + nombres + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", creadoEn=" + creadoEn +
+                ", roles=" + roles +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

@@ -5,13 +5,14 @@ import com.deconfort.tienda.usuarios.dto.UpdateUsuarioDTO;
 import com.deconfort.tienda.usuarios.dto.UsuarioDTO;
 import com.deconfort.tienda.usuarios.model.Rol;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
-import com.deconfort.tienda.usuarios.repository.UsuarioRepository;
+import com.deconfort.tienda.usuarios.port.EncoderPort;
+import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
 import com.deconfort.tienda.usuarios.service.IUsuarioService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,18 +20,18 @@ import java.util.List;
 @Service
 public class UsuarioService implements IUsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UsuarioDataPort usuarioDataPort;
+    private final EncoderPort passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioService(UsuarioDataPort usuarioDataPort, EncoderPort passwordEncoder) {
+        this.usuarioDataPort = usuarioDataPort;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UsuarioDTO obtenerUsuarioPorId(long id){
 
-        UsuarioDTO usuario = usuarioRepository.findById(id)
+        UsuarioDTO usuario = usuarioDataPort.getUsuarioById(id)
                 .map(u -> new UsuarioDTO(
                         u.getNombres(),
                         u.getApellidos(),
@@ -46,8 +47,10 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public Page<UsuarioDTO> obtenerUsuariosPaginados(int page, int size) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("nombres").ascending());
-        return usuarioRepository.findAll(pageable)
+
+        return usuarioDataPort.getAllPage(pageable)
                 .map(usuario -> new UsuarioDTO(
                         usuario.getNombres(),
                         usuario.getApellidos(),
@@ -70,13 +73,13 @@ public class UsuarioService implements IUsuarioService {
         usuarioNuevo.setPassword(passwordEncoder.encode(usuario.password()));
         usuarioNuevo.setRoles(List.of(Rol.USER));
 
-        usuarioRepository.save(usuarioNuevo);
+        usuarioDataPort.saveUsuario(usuarioNuevo);
 
     }
 
     @Override
     public UpdateUsuarioDTO actualizarUsuario(long idUsuario, UpdateUsuarioDTO nuevoUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        Usuario usuario = usuarioDataPort.getUsuarioById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (nuevoUsuario.nombres() != null) usuario.setNombres(nuevoUsuario.nombres());
@@ -85,7 +88,7 @@ public class UsuarioService implements IUsuarioService {
         if (nuevoUsuario.telefono() != null) usuario.setTelefono(nuevoUsuario.telefono());
         if (nuevoUsuario.fechaNacimiento() != null) usuario.setFechaNacimiento(nuevoUsuario.fechaNacimiento());
 
-        usuarioRepository.save(usuario);
+        usuarioDataPort.saveUsuario(usuario);
 
         return new UpdateUsuarioDTO(
                 usuario.getNombres(),
@@ -98,7 +101,7 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void eliminarUsuario(long idUsuario){
-        usuarioRepository.deleteById(idUsuario);
+        usuarioDataPort.eliminarUsuario(idUsuario);
     }
 
 }

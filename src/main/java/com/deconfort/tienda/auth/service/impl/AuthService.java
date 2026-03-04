@@ -27,7 +27,7 @@ public class AuthService implements IAuthService {
     public String login(LoginRequest loginRequest){
         authenticationPort.authenticate(loginRequest.email(), loginRequest.password());
 
-        UsuarioDTO usuarioDTO = usuarioPort.getUserIdByEmail(loginRequest.email());
+        UsuarioDTO usuarioDTO = usuarioPort.getUserByEmail(loginRequest.email());
 
         String id = String.valueOf(usuarioDTO.id());
 

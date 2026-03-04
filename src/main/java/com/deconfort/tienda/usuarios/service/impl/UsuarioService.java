@@ -38,7 +38,8 @@ public class UsuarioService implements IUsuarioService {
                         u.getEmail(),
                         u.getTelefono(),
                         u.getFechaNacimiento(),
-                        u.getRoles().stream().map(Enum::name).toList()
+                        u.getRoles().stream().map(Enum::name).toList(),
+                        u.isEstado()
                 ))
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -57,7 +58,8 @@ public class UsuarioService implements IUsuarioService {
                         usuario.getEmail(),
                         usuario.getTelefono(),
                         usuario.getFechaNacimiento(),
-                        usuario.getRoles().stream().map(Enum::name).toList()
+                        usuario.getRoles().stream().map(Enum::name).toList(),
+                        usuario.isEstado()
                 ));
     }
 
@@ -103,5 +105,22 @@ public class UsuarioService implements IUsuarioService {
     public void eliminarUsuario(long idUsuario){
         usuarioDataPort.eliminarUsuario(idUsuario);
     }
+
+    @Override
+    public List<UsuarioDTO> getAll() {
+
+        List<Usuario> usuarios = usuarioDataPort.getAll();
+
+        return usuarios.stream().map(usuario -> new UsuarioDTO(
+                usuario.getNombres(),
+                usuario.getApellidos(),
+                usuario.getEmail(),
+                usuario.getTelefono(),
+                usuario.getFechaNacimiento(),
+                usuario.getRoles().stream().map(Enum::name).toList(),
+                usuario.isEstado()
+        )).toList();
+    }
+
 
 }

@@ -19,7 +19,7 @@ public class UsuarioAdapter implements UsuarioPort {
     }
 
     @Override
-    public UsuarioDTO getUserIdByEmail(String email) {
+    public UsuarioDTO getUserByEmail(String email) {
 
         Usuario usuario = usuarioDataPort.getUsuarioByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

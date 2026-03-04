@@ -1,5 +1,6 @@
 package com.deconfort.tienda.usuarios.adapter;
 
+import com.deconfort.tienda.auth.port.AuthenticationPort;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
 import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
 import com.deconfort.tienda.usuarios.repository.UsuarioRepository;
@@ -21,7 +22,9 @@ public class UsuariosMysqlAdapter implements UsuarioDataPort {
 
     public UsuariosMysqlAdapter(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
+
     }
+
 
     @Override
     public Optional<Usuario> getUsuarioByEmail(String email) {

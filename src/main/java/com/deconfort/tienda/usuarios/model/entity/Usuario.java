@@ -19,11 +19,12 @@ public class Usuario {
     private String telefono;
     private LocalDate fechaNacimiento;
     private LocalDate creadoEn;
+    private boolean estado;
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
     private List<Rol> roles;
 
-    public Usuario(Long id, String nombres, String apellidos, String email, String password, String telefono, LocalDate fechaNacimiento, LocalDate creadoEn, List<Rol> roles) {
+    public Usuario(Long id, String nombres, String apellidos, String email, String password, String telefono, LocalDate fechaNacimiento, LocalDate creadoEn, boolean estado, List<Rol> roles) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -32,25 +33,11 @@ public class Usuario {
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
         this.creadoEn = creadoEn;
+        this.estado = estado;
         this.roles = roles;
     }
 
     public Usuario() {
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "id=" + id +
-                ", nombres='" + nombres + '\'' +
-                ", apellidos='" + apellidos + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                ", creadoEn=" + creadoEn +
-                ", roles=" + roles +
-                '}';
     }
 
     public Long getId() {
@@ -115,6 +102,14 @@ public class Usuario {
 
     public void setCreadoEn(LocalDate creadoEn) {
         this.creadoEn = creadoEn;
+    }
+
+    public boolean isEstado() {
+        return estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
     }
 
     public List<Rol> getRoles() {

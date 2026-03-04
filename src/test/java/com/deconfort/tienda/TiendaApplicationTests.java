@@ -1,35 +1,34 @@
 package com.deconfort.tienda;
 
-import com.deconfort.tienda.security.port.UsuarioAuthPort;
 import com.deconfort.tienda.usuarios.model.Rol;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
 import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
-import com.deconfort.tienda.usuarios.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
+
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.aop.auto=false")
 @AutoConfigureMockMvc(addFilters = false)
 @Transactional
-@WithMockUser(username = "admin", roles = {"ADMIN"})
 class TiendaApplicationTests {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -48,12 +47,12 @@ class TiendaApplicationTests {
 		usuario.setNombres("Jose");
 		usuario.setApellidos("Castillo");
 		usuario.setRoles(List.of(Rol.ADMIN));
-
 		usuarioDataPort.saveUsuario(usuario);
 	}
 
 	@Test
 	void deberiaListarUsuarios() throws Exception {
+
 		mockMvc.perform(get("/usuarios"))
 				.andExpect(status().isOk());
 	}
@@ -71,6 +70,7 @@ class TiendaApplicationTests {
 		mockMvc.perform(post("/auth/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(body))
+				.andDo(print())
 				.andExpect(status().isOk());
 	}
 }

@@ -1,9 +1,12 @@
 package com.deconfort.tienda.usuarios.adapter;
 
+import com.deconfort.tienda.auth.port.AuthenticationPort;
 import com.deconfort.tienda.usuarios.model.Rol;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
+import com.deconfort.tienda.usuarios.port.EncoderPort;
 import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
-import org.springframework.context.annotation.Primary;
+import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,20 +23,29 @@ import java.util.UUID;
 @Profile("list")
 public class ListUsuarioAdapter implements UsuarioDataPort {
 
-    List<Usuario> usuarios = new ArrayList<>(
-            List.of(
-                    new Usuario(4L,"Pepe","Condori Chauca",
-                            "joseito97.15.jc@gmail.com","123456","922018160",
-                            LocalDate.now(),LocalDate.now(),List.of(Rol.ADMIN)),
+    private final EncoderPort encoderPort;
 
-                    new Usuario(2L,"Condor","Condori Chauca",
-                            "joseito97.15.jcc@gmail.com","123456","922018160",
-                            LocalDate.now(),LocalDate.now(),List.of(Rol.USER))
-            )
-    );
+    List<Usuario> usuarios = new ArrayList<>();
+
+    public ListUsuarioAdapter(EncoderPort encoderPort) {
+        this.encoderPort = encoderPort;
+    }
+
+    @PostConstruct
+    public void cargarUsuarios(){
+        usuarios.add(new Usuario(4L,"Pepe","Condori Chauca",
+                "joseito97.15.jc@gmail.com", encoderPort.encode("123456"), "922018160",
+                LocalDate.now(),LocalDate.now(),true,List.of(Rol.ADMIN)));
+
+        usuarios.add( new Usuario(2L,"Condor","Condori Chauca",
+                "joseito97.15.jcc@gmail.com",encoderPort.encode("123456"),"922018160",
+                LocalDate.now(),LocalDate.now(),false,List.of(Rol.USER)));
+    }
+
 
     @Override
     public Optional<Usuario> getUsuarioByEmail(String email) {
+
         return usuarios.stream()
                 .filter(usuario -> usuario.getEmail().equals(email))
                 .findFirst();
@@ -83,9 +95,6 @@ public class ListUsuarioAdapter implements UsuarioDataPort {
             usuarios.add(usuario);
         }
 
-        System.out.println(usuario.toString());
-        System.out.println(usuarios.size());
-
         return usuario;
     }
 
@@ -93,5 +102,6 @@ public class ListUsuarioAdapter implements UsuarioDataPort {
     public List<Usuario> getAll() {
         return usuarios;
     }
+
 
 }

@@ -1,14 +1,22 @@
 package com.deconfort.tienda.security.model;
 
-import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class UsuarioAuth {
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class UsuarioAuth implements UserDetails {
+    private Long id;
     private String email;
     private String password;
     private boolean enabled;
     private List<String> roles;
 
-    public UsuarioAuth(String email, String password, boolean enabled, List<String> roles) {
+    public UsuarioAuth(Long id, String email, String password, boolean enabled, List<String> roles) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.enabled = enabled;
@@ -26,8 +34,20 @@ public class UsuarioAuth {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     public void setPassword(String password) {
@@ -48,5 +68,13 @@ public class UsuarioAuth {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -23,6 +23,7 @@ public class UsuarioAuthAdapter implements UsuarioAuthPort {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         UsuarioAuth usuarioAuth = new UsuarioAuth();
+        usuarioAuth.setId(usuario.getId());
         usuarioAuth.setEmail(usuario.getEmail());
         usuarioAuth.setPassword(usuario.getPassword());
         usuarioAuth.setEnabled(true);

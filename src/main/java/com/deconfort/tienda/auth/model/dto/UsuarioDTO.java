@@ -3,7 +3,7 @@ package com.deconfort.tienda.auth.model.dto;
 import java.util.List;
 
 public record UsuarioDTO (
-        long id,
+        Long id,
         String email,
         List<String> roles
 ){

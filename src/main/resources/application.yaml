@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: list
+    active: mysql
   datasource:
     url: jdbc:mysql://localhost:3306/tiendaDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root

@@ -1,10 +1,8 @@
 package com.deconfort.tienda.usuarios.adapter;
 
-import com.deconfort.tienda.auth.port.AuthenticationPort;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
 import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
 import com.deconfort.tienda.usuarios.repository.UsuarioRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

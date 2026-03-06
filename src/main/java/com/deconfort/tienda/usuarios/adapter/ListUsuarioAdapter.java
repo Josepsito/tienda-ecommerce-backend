@@ -1,12 +1,10 @@
 package com.deconfort.tienda.usuarios.adapter;
 
-import com.deconfort.tienda.auth.port.AuthenticationPort;
 import com.deconfort.tienda.usuarios.model.Rol;
 import com.deconfort.tienda.usuarios.model.entity.Usuario;
 import com.deconfort.tienda.usuarios.port.EncoderPort;
 import com.deconfort.tienda.usuarios.port.UsuarioDataPort;
 import jakarta.annotation.PostConstruct;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
